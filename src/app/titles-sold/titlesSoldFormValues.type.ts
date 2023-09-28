@@ -6,4 +6,6 @@ export type TitlesSoldFormValues = {
   praca: string;
   susep: string;
   version: number;
+  raffleDate: string;
+  raffleNumber: number;
   };

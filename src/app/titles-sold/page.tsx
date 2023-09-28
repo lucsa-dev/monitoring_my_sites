@@ -19,8 +19,10 @@ export default function TitlesSold() {
     formData.append('uploadSpreadsheet', file);
     formData.append('version', values.version.toString());
     formData.append('susep', values.susep);
+    formData.append('raffleDate', values.raffleDate);
+    formData.append('raffleNumber', values.raffleNumber.toString());
 
-    const response = await fetch('/api/submit', {
+    const response = await fetch('/api/titles-sold', {
       method: 'POST',
       body: formData, 
     });
@@ -36,14 +38,16 @@ export default function TitlesSold() {
         Remessa de Títulos Vendidos
     </h1>
     <Divider />
-    <Form
-      name="control-hooks"
-      onFinish={onFinish}
-      
-
-    >
+    <Form name="control-hooks" onFinish={onFinish}>
         <Form.Item name="name" label="'Nome ou Sigla" rules={[{ required: true }]}>
             <Input  maxLength={15} />
+        </Form.Item>
+        <Form.Item name="cnpj" label="CNPJ" rules={[{ required: true }]}>
+            <MaskedInput
+                mask={
+                    ' 00.000.000/0000-00'
+                }
+            />  
         </Form.Item>
         <Form.Item name="environment" label="Ambiente" rules={[{ required: true }]}>
           <Radio.Group name="environment">
@@ -64,30 +68,25 @@ export default function TitlesSold() {
             </Upload>
         </Form.Item>
         <Form.Item name="praca" label="Código da praça" rules={[{ required: true }]}>
-            <Input name="environment" maxLength={3} defaultValue='000'  />
+            <Input name="environment" maxLength={3} />
         </Form.Item>
-        <Form.Item name="cnpj" label="CNPJ" rules={[{ required: true }]}>
-            <MaskedInput
-                mask={
-                    ' 00.000.000/0000-00'
-                }
-            />  
-        </Form.Item>
-
         <Form.Item name="version" label="Versão do arquivo" rules={[{ required: true }]}>
             <InputNumber name="version" defaultValue={1} />
         </Form.Item>
-
         <Form.Item name="susep" label="Código do processo SUSESP" rules={[{ required: true }]}>
             <Input name="susep" maxLength={17} />
         </Form.Item>
-
+        <Form.Item name="raffleDate" label="Data do sorteio" rules={[{ required: true }]}>
+            <Input type="date" name="raffleDate" />
+        </Form.Item>
+        <Form.Item name="raffleNumber" label="Número do sorteio" rules={[{ required: true }]}>
+            <Input type="number" name="raffleNumber" />
+        </Form.Item>
         <Form.Item>
             <Button htmlType="submit">
                 Enviar
             </Button>
         </Form.Item>
-            
     </Form>
     </main>
   )
