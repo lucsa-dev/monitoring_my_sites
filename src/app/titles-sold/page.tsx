@@ -15,7 +15,6 @@ export default function TitlesSold() {
     formData.append('name', values.name);
     formData.append('cnpj', values.cnpj);
     formData.append('praca', values.praca);
-    formData.append('environment', values.environment);
     formData.append('uploadSpreadsheet', file);
     formData.append('version', values.version.toString());
     formData.append('susep', values.susep);
@@ -25,10 +24,18 @@ export default function TitlesSold() {
     const response = await fetch('/api/titles-sold', {
       method: 'POST',
       body: formData, 
-    });
+    })
 
-    // Handle response if necessary
-    const data = await response.json();
+    //download zipfile
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'remessa.zip');
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode?.removeChild(link);
+    
     };
   
 
@@ -49,15 +56,6 @@ export default function TitlesSold() {
                 }
             />  
         </Form.Item>
-        <Form.Item name="environment" label="Ambiente" rules={[{ required: true }]}>
-          <Radio.Group name="environment">
-            <Radio.Button value="A">Processamento</Radio.Button>
-            <Radio.Button value="C">Construção</Radio.Button>
-            <Radio.Button value="D">Teste Integrado</Radio.Button>
-            <Radio.Button value="H">Homologação</Radio.Button>
-            <Radio.Button value="P">Produção</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
         <Form.Item name="uploadSpreadsheet" label="Planilha de Títulos Vendidos" rules={[{ required: true }]}>
             <Upload name="uploadSpreadsheet"
               beforeUpload={(file) => {
@@ -71,7 +69,7 @@ export default function TitlesSold() {
             <Input name="environment" maxLength={3} />
         </Form.Item>
         <Form.Item name="version" label="Versão do arquivo" rules={[{ required: true }]}>
-            <InputNumber name="version" defaultValue={1} />
+            <InputNumber name="version" maxLength={6} />
         </Form.Item>
         <Form.Item name="susep" label="Código do processo SUSESP" rules={[{ required: true }]}>
             <Input name="susep" maxLength={17} />
@@ -80,7 +78,7 @@ export default function TitlesSold() {
             <Input type="date" name="raffleDate" />
         </Form.Item>
         <Form.Item name="raffleNumber" label="Número do sorteio" rules={[{ required: true }]}>
-            <Input type="number" name="raffleNumber" />
+            <Input type="number" maxLength={3} name="raffleNumber" />
         </Form.Item>
         <Form.Item>
             <Button htmlType="submit">

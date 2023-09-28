@@ -70,6 +70,7 @@ export function createHeader(data: FormData, raffleData: any[], firstOrderPrice:
     }
 
     // 11. Adicionar valor do primeiro pagamento
+    firstOrderPrice = (firstOrderPrice.replace(/[./-]/g, '')).padStart(9, "0")
     for(let i = 0; i < firstOrderPrice.length; i++) {
         arrayHeader.push(firstOrderPrice[i])
     }
@@ -133,7 +134,11 @@ export function createDetail(ticket: Ticket): string[]{
     }
 
     // 7. Adicionar primeiro numero da combinação da rodada da sorte
-    //TODO
+    // TODO
+    const firstCombinationNumber = "00000000"
+    for (let i = 0; i < firstCombinationNumber.length; i++) {
+        arrayDetail.push(firstCombinationNumber[i])
+    }
 
     // 8. adicionar 8 espaços em branco
     for (let i = 0; i < 8; i++) {
@@ -141,7 +146,7 @@ export function createDetail(ticket: Ticket): string[]{
     }
 
     // 9. adicionar valor do bilhete
-    const price = ticket.price.padStart(9, "0")
+    const price = ticket.price.replace(/[./-]/g, '').padStart(9, "0")
     for (let i = 0; i < price.length; i++) {
         arrayDetail.push(price[i])
     }
@@ -155,6 +160,36 @@ export function createDetail(ticket: Ticket): string[]{
     }
 
     return arrayDetail
+}
+
+export function createTrailer(qtd: number){
+    qtd = qtd + 1
+    const arrayTrailer = [];
+
+    // 1. Adicionar T no início da primeira linha
+    arrayTrailer.push('T')
+
+    // 2. Adicionar a quantidade de registros
+    const qtdRegistros = qtd.toString().padStart(9, "0")
+    for (let i = 0; i < qtdRegistros.length; i++) {
+        arrayTrailer.push(qtdRegistros[i])
+    }
+
+    return arrayTrailer
+}
+
+export function createFileName(data: FormData): string {
+    const now = new Date();
+
+    // Obter o ano, mês, dia, hora e minuto
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Adiciona zero à esquerda, se necessário
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const praca = (data.get('praca')  as string).padStart(3, "0")
+    return `INTEGRAÇÃO.${praca}.VND.${year}${month}${day}_${hours}${minutes}`;
 }
 
 export function getTicketsSold(raffleData: RaffleData[]): Ticket[] {
@@ -172,4 +207,3 @@ export function getTicketsSold(raffleData: RaffleData[]): Ticket[] {
     })
     return tickets_sold
     }
-
