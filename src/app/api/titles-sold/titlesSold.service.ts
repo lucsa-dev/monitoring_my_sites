@@ -1,4 +1,7 @@
-export default function createHeader(data: FormData, raffleData: any[]): string[]{
+import { RaffleData, Ticket } from "./titles-sold";
+
+
+export function createHeader(data: FormData, raffleData: any[], firstOrderPrice: string): string[]{
     const arrayHeader = [];
 
     // Header
@@ -67,9 +70,8 @@ export default function createHeader(data: FormData, raffleData: any[]): string[
     }
 
     // 11. Adicionar valor do primeiro pagamento
-    const firstOrderValue = raffleData[0].Valor.replace("R$ ", "").replace(",", "").padStart(9, "0")
-    for(let i = 0; i < firstOrderValue.length; i++) {
-        arrayHeader.push(firstOrderValue[i])
+    for(let i = 0; i < firstOrderPrice.length; i++) {
+        arrayHeader.push(firstOrderPrice[i])
     }
 
     // 12. Adicionar o número de casas decimais do valor do primeiro pagamento
@@ -94,3 +96,80 @@ export default function createHeader(data: FormData, raffleData: any[]): string[
 
     return arrayHeader
 }
+
+
+export function createDetail(ticket: Ticket): string[]{
+    const arrayDetail = [];
+
+    // Detail
+    // 1. Adicionar D no início da primeira linha
+    arrayDetail.push('D')
+
+    // 2. Adicionar o número do sorteio PSTC
+    const pstc = "00000000";
+    for (let i = 0; i < pstc.length; i++) {
+        arrayDetail.push(pstc[i])
+    }
+
+    // 3. Adicionar o número do bilhete
+    const number = ticket.number.padStart(8, "0")
+    for (let i = 0; i < number.length; i++) {
+        arrayDetail.push(number[i])
+    }
+
+    // 4. Adicionar 92 espaços em branco
+    for (let i = 0; i < 92; i++) {
+        arrayDetail.push(" ")
+    }
+
+    // 5. Adicionar o status vendido
+    const status = "1"
+    arrayDetail.push(status)
+
+     // 6. Adicionar o número do sorteio
+    const raffleNumber = ticket.number.padStart(3, "0")
+    for(let i = 0; i < raffleNumber.length; i++) {
+        arrayDetail.push(raffleNumber[i])
+    }
+
+    // 7. Adicionar primeiro numero da combinação da rodada da sorte
+    //TODO
+
+    // 8. adicionar 8 espaços em branco
+    for (let i = 0; i < 8; i++) {
+        arrayDetail.push(" ")
+    }
+
+    // 9. adicionar valor do bilhete
+    const price = ticket.price.padStart(9, "0")
+    for (let i = 0; i < price.length; i++) {
+        arrayDetail.push(price[i])
+    }
+
+    // 10. Adicionar o número de casas decimais do valor do primeiro pagamento
+    arrayDetail.push('2')
+
+    // 11. Adicionar 170 espaços em branco
+    for (let i = 0; i < 170; i++) {
+        arrayDetail.push(" ")
+    }
+
+    return arrayDetail
+}
+
+export function getTicketsSold(raffleData: RaffleData[]): Ticket[] {
+    const tickets_sold: Ticket[] = []
+    raffleData.forEach((item) => {
+        const tickets = item.Bilhetes?.split(', ') as string[]
+        const ticketWithPrice = tickets.map((ticket) => {
+        const price = item.Valor?.replace("R$ ", "").replace(",", ".") as string
+        return {
+            price: String(parseFloat(price) / parseInt(item.Qtd_bilhetes as string)),
+            number: ticket,
+        }
+        })
+        tickets_sold.push(...ticketWithPrice)
+    })
+    return tickets_sold
+    }
+
