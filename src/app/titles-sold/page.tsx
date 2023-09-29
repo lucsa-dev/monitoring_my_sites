@@ -94,13 +94,16 @@ export default function TitlesSold() {
         tooltip="Um arquivo CSV com os títulos vendidos exportados do SDR!"
         rules={[
           {
-            required: file === null,
+            required: file === null || file.length === 0,
             message: 'Por favor, selecione um arquivo CSV!',
           },
         ]}>
           <Upload
             maxCount={1}
             accept='.csv'
+            onRemove={() => {
+              setFile(null);
+            }}
             beforeUpload={(file) => {
               setFile(file);
               return false;
