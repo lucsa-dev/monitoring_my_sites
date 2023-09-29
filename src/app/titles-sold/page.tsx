@@ -3,8 +3,6 @@ import { Button, Divider, Form, Input, InputNumber, Radio, Tooltip, Upload, Uplo
 import { MaskedInput } from 'antd-mask-input';
 import { TitlesSoldFormValues } from './titlesSoldFormValues.type';
 import { useState } from 'react';
-import { InfoCircleOutlined } from '@ant-design/icons';
-
 export default function TitlesSold() {
   const [file, setFile] = useState<File | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -14,6 +12,7 @@ export default function TitlesSold() {
       return;
     }
     const formData = new FormData();
+    formData.append('integration', values.integration);
     formData.append('name', values.name);
     formData.append('cnpj', values.cnpj);
     formData.append('praca', values.praca);
@@ -49,120 +48,132 @@ export default function TitlesSold() {
     </h1>
     <Divider />
     <Form name="control-hooks" onFinish={onFinish}>
-        <Form.Item
-          name="name"
-          label="Nome ou Sigla" 
-          tooltip="Nome ou sigla da Endidade Filantrópica"
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira o nome ou sigla da entidade filantrópica!',
-            },
-          ]}
-          >
-            <Input maxLength={15} />
-        </Form.Item>
-        <Form.Item 
-          name="cnpj" 
-          label="CNPJ" 
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira o CNPJ!',
-            },
-          ]}
-        >
-            <MaskedInput
-                mask={
-                    ' 00.000.000/0000-00'
-                }
-            />  
-        </Form.Item>
-        <Form.Item 
-          name="uploadSpreadsheet" 
-          label="Relatório de Títulos Vendidos"
-          tooltip="Um arquivo CSV com os títulos vendidos exportados do SDR!"
-          rules={[
-            {
-              required: file === null, // Aplicar a validação required apenas se 'file' for null
-              message: 'Por favor, selecione um arquivo CSV!',
-            },
-          ]}>
-            <Upload
-              maxCount={1}
-              accept='.csv'
-              beforeUpload={(file) => {
-                setFile(file);
-                return false;
-              }}>
-              <Button>Selecione o arquivo</Button>
-            </Upload>
-        </Form.Item>
-        <Form.Item 
-          name="praca" 
-          label="Código da praça" 
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira o código da praça!',
-            },
-          ]}
-        >
-            <Input maxLength={3} />
-        </Form.Item>
-        <Form.Item 
-          name="version" 
-          label="Versão do arquivo" 
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira a versão do arquivo!',
-            },
-          ]}
-        >
-            <InputNumber maxLength={6} />
-        </Form.Item>
-        <Form.Item 
-          name="susep" 
-          label="Código do processo SUSESP" 
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira o código do processo SUSESP!',
-            },
-          ]}
-        >
-            <Input maxLength={17} />
-        </Form.Item>
-        <Form.Item 
-          name="raffleDate" 
-          label="Data do sorteio" 
-          rules={[
-            {
-              required: true,
-              message: 'Por favor, insira a data do sorteio!',
-            },
-          ]}
-        >
-            <Input type="date" name="raffleDate" />
-        </Form.Item>
-        <Form.Item name="raffleNumber" label="Número do sorteio" rules={[
+      <Form.Item
+        name="integration"
+        label="Nome da integração" 
+        rules={[
           {
             required: true,
-            message: "Por favor insira um número!",
+            message: 'Por favor, insira o nome da integração!',
           },
+        ]}
+      >
+          <Input />
+      </Form.Item>
+      <Form.Item
+        name="name"
+        label="Nome ou Sigla" 
+        tooltip="Nome ou sigla da Endidade Filantrópica"
+        rules={[
           {
-            pattern: /^[\d]{0,3}$/,
-            message: "Valor deve conter apenas 3 caracteres",
+            required: true,
+            message: 'Por favor, insira o nome ou sigla da entidade filantrópica!',
           },
-          ]}>
-            <Input type="number" name="raffleNumber" />
-        </Form.Item>
-        <Form.Item>
-            <Button htmlType="submit">
-                Enviar
-            </Button>
-        </Form.Item>
+        ]}
+        >
+          <Input maxLength={15} />
+      </Form.Item>
+      <Form.Item 
+        name="cnpj" 
+        label="CNPJ" 
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira o CNPJ!',
+          },
+        ]}
+      >
+          <MaskedInput
+              mask={
+                  ' 00.000.000/0000-00'
+              }
+          />  
+      </Form.Item>
+      <Form.Item 
+        name="uploadSpreadsheet" 
+        label="Relatório de Títulos Vendidos"
+        tooltip="Um arquivo CSV com os títulos vendidos exportados do SDR!"
+        rules={[
+          {
+            required: file === null,
+            message: 'Por favor, selecione um arquivo CSV!',
+          },
+        ]}>
+          <Upload
+            maxCount={1}
+            accept='.csv'
+            beforeUpload={(file) => {
+              setFile(file);
+              return false;
+            }}>
+            <Button>Selecione o arquivo</Button>
+          </Upload>
+      </Form.Item>
+      <Form.Item 
+        name="praca" 
+        label="Código da praça" 
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira o código da praça!',
+          },
+        ]}
+      >
+          <Input maxLength={3} />
+      </Form.Item>
+      <Form.Item 
+        name="version" 
+        label="Versão do arquivo" 
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira a versão do arquivo!',
+          },
+        ]}
+      >
+          <InputNumber maxLength={6} />
+      </Form.Item>
+      <Form.Item 
+        name="susep" 
+        label="Código do processo SUSESP" 
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira o código do processo SUSESP!',
+          },
+        ]}
+      >
+          <Input maxLength={17} />
+      </Form.Item>
+      <Form.Item 
+        name="raffleDate" 
+        label="Data do sorteio" 
+        rules={[
+          {
+            required: true,
+            message: 'Por favor, insira a data do sorteio!',
+          },
+        ]}
+      >
+          <Input type="date" name="raffleDate" />
+      </Form.Item>
+      <Form.Item name="raffleNumber" label="Número do sorteio" rules={[
+        {
+          required: true,
+          message: "Por favor insira um número!",
+        },
+        {
+          pattern: /^[\d]{0,3}$/,
+          message: "Valor deve conter apenas 3 caracteres",
+        },
+        ]}>
+          <Input type="number" name="raffleNumber" />
+      </Form.Item>
+      <Form.Item>
+          <Button htmlType="submit">
+              Download
+          </Button>
+      </Form.Item>
     </Form>
     {contextHolder}
     </main>

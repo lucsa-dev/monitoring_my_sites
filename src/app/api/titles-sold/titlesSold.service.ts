@@ -4,7 +4,6 @@ import { RaffleData, Ticket } from "./titles-sold";
 export function createHeader(data: FormData, raffleData: any[], firstOrderPrice: string): string[]{
     const arrayHeader = [];
 
-    // Header
     // 1. Adicionar H no início da primeira linha
     arrayHeader.push('H')
 
@@ -103,7 +102,6 @@ export function createHeader(data: FormData, raffleData: any[], firstOrderPrice:
 export function createDetail(ticket: Ticket): string[]{
     const arrayDetail = [];
 
-    // Detail
     // 1. Adicionar D no início da primeira linha
     arrayDetail.push('D')
 
@@ -182,16 +180,17 @@ export function createTrailer(qtd: number){
 
 export function createFileName(data: FormData): string {
     const now = new Date();
+    const integration = (data.get('integration')  as string).toUpperCase().replace(" ", "_")
 
     // Obter o ano, mês, dia, hora e minuto
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Adiciona zero à esquerda, se necessário
+    const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
 
     const praca = (data.get('praca')  as string).padStart(3, "0")
-    return `INTEGRAÇÃO.${praca}.VND.${year}${month}${day}_${hours}${minutes}`;
+    return `${integration}.${praca}.VND.${year}${month}${day}_${hours}${minutes}`;
 }
 
 export function getTicketsSold(raffleData: RaffleData[]): Ticket[] {

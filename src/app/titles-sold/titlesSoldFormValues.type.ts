@@ -1,4 +1,5 @@
 export type TitlesSoldFormValues = {
+  integration: string;
   name: string;
   uploadSpreadsheet: string;
   cnpj: string;
