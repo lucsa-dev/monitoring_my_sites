@@ -5,7 +5,6 @@ import { TitlesSoldFormValues } from './titlesSoldFormValues.type';
 import { useState } from 'react';
 export default function TitlesSold() {
   const [file, setFile] = useState<File | null>(null);
-  const [messageApi, contextHolder] = message.useMessage();
 
   const onFinish = async (values: TitlesSoldFormValues) => { 
     if (!file) {
@@ -175,7 +174,6 @@ export default function TitlesSold() {
           </Button>
       </Form.Item>
     </Form>
-    {contextHolder}
     </main>
   )
 }

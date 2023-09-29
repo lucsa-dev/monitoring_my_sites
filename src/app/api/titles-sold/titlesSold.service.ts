@@ -1,6 +1,5 @@
 import { RaffleData, Ticket } from "./titles-sold";
 
-
 export function createHeader(data: FormData, raffleData: any[], firstOrderPrice: string): string[]{
     const arrayHeader = [];
 
@@ -97,7 +96,6 @@ export function createHeader(data: FormData, raffleData: any[], firstOrderPrice:
 
     return arrayHeader
 }
-
 
 export function createDetail(ticket: Ticket): string[]{
     const arrayDetail = [];
@@ -207,4 +205,4 @@ export function getTicketsSold(raffleData: RaffleData[]): Ticket[] {
         tickets_sold.push(...ticketWithPrice)
     })
     return tickets_sold
-    }
+}
