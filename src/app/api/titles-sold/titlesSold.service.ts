@@ -9,6 +9,7 @@ export function createHeader(data: FormData, raffleData: any[], firstOrderPrice:
     arrayHeader.push('H')
 
     // 2. Adicionar o tipo do arquivo na primeira linha
+    // TODO - Não sei qual opção colocar, escolhi a primeira
     const fileType = "REM PROP__"
     for(let i = 0; i < fileType.length; i++) {
         arrayHeader.push(fileType[i])
@@ -107,7 +108,8 @@ export function createDetail(ticket: Ticket): string[]{
     arrayDetail.push('D')
 
     // 2. Adicionar o número do sorteio PSTC
-    const pstc = "00000000";
+    // TODO - Não sei o que é PSTC, coloquei o numero do bilhete
+    const pstc = ticket.number.padStart(8, "0");
     for (let i = 0; i < pstc.length; i++) {
         arrayDetail.push(pstc[i])
     }
@@ -134,7 +136,7 @@ export function createDetail(ticket: Ticket): string[]{
     }
 
     // 7. Adicionar primeiro numero da combinação da rodada da sorte
-    // TODO
+    // TODO - Não sei o que é rodada da sorte, coloquei 00000000
     const firstCombinationNumber = "00000000"
     for (let i = 0; i < firstCombinationNumber.length; i++) {
         arrayDetail.push(firstCombinationNumber[i])
